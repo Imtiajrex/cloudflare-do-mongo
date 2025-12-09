@@ -1,4 +1,4 @@
-import type { MongoDurableObject } from "./do";
+import type { MONGO_DURABLE_OBJECT } from "./do";
 
 // sharding config (not required, but useful for scaling)
 const NUMBER_OF_DO_SHARDS = 2; // increase this number to add more shards
@@ -8,7 +8,7 @@ const DO_INSTANCE_NAME_PREFIX = "mongo_shard_"; // Consistent prefix
 export function getDoStubForShard(
 	DURABLE_OBJECT: DurableObjectNamespace,
 	shardKey?: string | number
-): DurableObjectStub<MongoDurableObject> {
+): DurableObjectStub<MONGO_DURABLE_OBJECT> {
 	if (!DURABLE_OBJECT) {
 		throw new Error("getDoStubForShard: MONGO_DO binding missing from AppEnv.");
 	}
@@ -34,7 +34,7 @@ export function getDoStubForShard(
 	const durableObjectId = DURABLE_OBJECT.idFromName(doInstanceName);
 	const newStub = DURABLE_OBJECT.get(
 		durableObjectId
-	) as unknown as DurableObjectStub<MongoDurableObject>;
+	) as unknown as DurableObjectStub<MONGO_DURABLE_OBJECT>;
 
 	return newStub;
 }

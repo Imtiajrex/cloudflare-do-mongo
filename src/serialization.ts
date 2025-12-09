@@ -1,12 +1,10 @@
 import { ObjectId as NativeObjectId } from "mongodb";
 import {
-	SerializedObjectId,
-	SerializedDate,
-	isSerializedObjectId,
-	isSerializedDate,
-	isBufferedObjectId,
-	ToJsonFriendly,
 	FromJsonFriendly,
+	isBufferedObjectId,
+	isSerializedDate,
+	isSerializedObjectId,
+	ToJsonFriendly,
 } from "./bson-types";
 
 export function serializeToJSON<TInput>(data: TInput): ToJsonFriendly<TInput> {
@@ -87,9 +85,9 @@ function toHexFromObjectIdBuffer(value: { buffer: any }): string | null {
 	if (!bytes || bytes.length !== 12) return null;
 	let hex = "";
 	for (let i = 0; i < bytes.length; i++) {
-		const byte = bytes[i];
+		const byte = bytes[i]!;
 		if (!Number.isInteger(byte) || byte < 0 || byte > 255) return null;
-		hex += byte.toString(16).padStart(2, "0");
+		hex += byte?.toString(16).padStart(2, "0");
 	}
 	return hex;
 }

@@ -49,7 +49,7 @@ export function isSerializedDate(value: any): value is SerializedDate {
 export function isBufferedObjectId(value: any): value is BufferedObjectId {
 	if (typeof value !== "object" || value === null || !("buffer" in value))
 		return false;
-	const buffer = (value as any).buffer;
+	const buffer = (value as any).buffer as any;
 	if (buffer instanceof ArrayBuffer) return true;
 	if (ArrayBuffer.isView(buffer)) return buffer.byteLength === 12;
 	if (Array.isArray(buffer))
@@ -62,7 +62,7 @@ export function isBufferedObjectId(value: any): value is BufferedObjectId {
 	)
 		return (
 			buffer.data.length === 12 &&
-			buffer.data.every((b) => typeof b === "number")
+			buffer.data.every((b: any) => typeof b === "number")
 		);
 	return false;
 }

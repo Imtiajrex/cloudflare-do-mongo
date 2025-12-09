@@ -55,6 +55,7 @@ export class CollectionProxy<TSchema extends Document = Document>
 	): Promise<TDriverResult> {
 		const argumentsAsJson = serializeToJSON(args) as ToJsonFriendly<unknown[]>;
 		const payload: MongoRpcPayload = {
+			db: this.databaseName,
 			col: this.collectionName,
 			op,
 			args: argumentsAsJson,

@@ -52,9 +52,7 @@ export class DatabaseProxy {
 			throw error;
 		}
 	}
-	async collection<TSchema extends Document = Document>(
-		collectionName: string
-	) {
+	collection<TSchema extends Document = Document>(collectionName: string) {
 		return new CollectionProxy<TSchema>(
 			this.databaseName,
 			collectionName,

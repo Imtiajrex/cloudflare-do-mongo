@@ -43,7 +43,6 @@ export function deserializeFromJSON<TOutput>(
 		}
 	}
 	if (isBufferedObjectId(data)) {
-		console.log("Deserializing buffered ObjectId:", data);
 		const hexString = toHexFromObjectIdBuffer(data);
 		if (hexString) {
 			try {

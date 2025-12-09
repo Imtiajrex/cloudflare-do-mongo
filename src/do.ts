@@ -48,6 +48,7 @@ export type MongoDatabaseOp =
 	| "stats";
 
 export interface MongoRpcPayload {
+	db?: string;
 	col?: string;
 	op: MongoCollectionOp | MongoDatabaseOp; // Clearer name for the operation
 	args: ToJsonFriendly<unknown[]>; // Clearer name
@@ -177,12 +178,16 @@ export class MongoDurableObject extends DurableObject {
 		payload: MongoRpcPayload,
 		session?: ClientSession
 	): Promise<MongoRpcResponseData> {
-		const { col, op, args: originalArgsFromJson } = payload;
+		const { db, col, op, args: originalArgsFromJson } = payload;
 		try {
 			if (!this.db) {
 				throw new Error(
 					`[MongoDO ${this.ctx.id.toString()}] Database instance not available after connection attempt.`
 				);
+			}
+			if (db && this.db.databaseName !== db) {
+				// Switch to the requested database if different
+				this.db = this.client.db(db);
 			}
 			let finalArgs = deserializeFromJSON(originalArgsFromJson) as any[];
 

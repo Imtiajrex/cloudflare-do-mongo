@@ -12,6 +12,7 @@ import { DatabaseProxy } from "./DatabaseProxy";
 import type { MongoRpcPayload, MongoRpcResponseData } from "./do";
 import { FindCursor } from "./FindCursor";
 import { getDoStubForShard } from "./sharding";
+import { env } from "cloudflare:workers";
 
 // Define a new type for transaction payloads with native JS arguments
 interface TransactionPayloadWithNativeArgs {
@@ -28,18 +29,12 @@ interface TransactionPayloadWithNativeArgs {
  * @param shardKey Optional: Name for the Durable Object ID.
  * @returns A CollectionProxy instance.
  */
-export function getCollection<TSchema extends Document = Document>({
-	DURABLE_OBJECT,
-	collectionName,
-	shardKey,
-	databaseName,
-}: {
-	DURABLE_OBJECT: DurableObjectNamespace;
-	collectionName: string;
-	shardKey?: string | number;
-	databaseName?: string;
-}) {
-	let doStub = getDoStubForShard(DURABLE_OBJECT, shardKey);
+export function getCollection<TSchema extends Document = Document>(
+	collectionName: string,
+	databaseName?: string,
+	shardKey?: string | number
+) {
+	let doStub = getDoStubForShard(env.MONGO_DURABLE_OBJECT, shardKey);
 	return new CollectionProxy<TSchema>(databaseName, collectionName, doStub);
 }
 
@@ -49,16 +44,8 @@ export function getCollection<TSchema extends Document = Document>({
  * @param shardKey Optional: Name for the Durable Object ID.
  * @returns A DatabaseProxy instance.
  */
-export function getDatabase({
-	DURABLE_OBJECT,
-	shardKey,
-	databaseName,
-}: {
-	DURABLE_OBJECT: DurableObjectNamespace;
-	shardKey?: string | number;
-	databaseName?: string;
-}) {
-	const doStub = getDoStubForShard(DURABLE_OBJECT, shardKey);
+export function getDatabase(databaseName?: string, shardKey?: string | number) {
+	const doStub = getDoStubForShard(env.MONGO_DURABLE_OBJECT, shardKey);
 	return new DatabaseProxy(databaseName, doStub);
 }
 export async function runTransaction(

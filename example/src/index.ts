@@ -1,4 +1,4 @@
-import { MongoDurableObject } from '../../src/do';
+import { MONGO_DURABLE_OBJECT } from '../../src/do';
 import { getDatabase } from '../../src/index';
 
 export default {
@@ -14,4 +14,4 @@ export default {
 	},
 } satisfies ExportedHandler<Env>;
 
-export const MONGO_DURABLE_OBJECT = MongoDurableObject;
+export { MONGO_DURABLE_OBJECT };

@@ -67,7 +67,7 @@ function isDatabaseOp(op: MongoRpcPayload["op"]): op is MongoDatabaseOp {
 }
 
 // Define the Durable Object class
-export class MongoDurableObject extends DurableObject {
+export class MONGO_DURABLE_OBJECT extends DurableObject {
 	// define mongodb client.
 	client: MongoClient;
 	connectPromise: Promise<void> | null = null;

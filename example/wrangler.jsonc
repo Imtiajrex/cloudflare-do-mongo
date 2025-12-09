@@ -10,14 +10,14 @@
 	"compatibility_flags": ["nodejs_compat", "nodejs_compat_populate_process_env"],
 	"migrations": [
 		{
-			"new_sqlite_classes": ["MongoDurableObject"],
+			"new_sqlite_classes": ["MONGO_DURABLE_OBJECT"],
 			"tag": "v1"
 		}
 	],
 	"durable_objects": {
 		"bindings": [
 			{
-				"class_name": "MongoDurableObject",
+				"class_name": "MONGO_DURABLE_OBJECT",
 				"name": "MONGO_DURABLE_OBJECT"
 			}
 		]

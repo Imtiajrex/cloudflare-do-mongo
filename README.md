@@ -19,10 +19,12 @@ A tiny helper to call MongoDB from Cloudflare Workers using Durable Objects. It 
   	],
   	"durable_objects": {
   		"bindings": [
-  			{ "name": "MY_DURABLE_OBJECT", "class_name": "MyDurableObject" }
+  			{ "name": "MONGO_DURABLE_OBJECT", "class_name": "MongoDurableObject" }
   		]
   	},
-  	"migrations": [{ "tag": "v1", "new_sqlite_classes": ["MyDurableObject"] }]
+  	"migrations": [
+  		{ "tag": "v1", "new_sqlite_classes": ["MongoDurableObject"] }
+  	]
   }
   ```
 - Set required secrets for your Mongo deployment:
@@ -36,14 +38,12 @@ A tiny helper to call MongoDB from Cloudflare Workers using Durable Objects. It 
 ## Basic Worker
 
 ```ts
-import { MongoDurableObject, getDatabase } from "cloudflare-do-mongo";
+import { MongoDurableObject } from "cloudflare-do-mongo/do";
+import { getDatabase } from "cloudflare-do-mongo";
 
 export default {
 	async fetch(_request, env): Promise<Response> {
-		const db = getDatabase({
-			DURABLE_OBJECT: env.MY_DURABLE_OBJECT,
-			databaseName: "my-db", // optional, falls back to env.MONGO_DB
-		});
+		const db = getDatabase("my-db"); // optional, falls back to env.MONGO_DB
 
 		const collection = db.collection("testCollection");
 		const inserted = await collection.insertOne({ name: "test", value: 42 });
@@ -53,15 +53,17 @@ export default {
 	},
 } satisfies ExportedHandler<Env>;
 
-export const MyDurableObject = MongoDurableObject;
+export const MONGO_DURABLE_OBJECT = MongoDurableObject;
 ```
+
+**Note:** The `MONGO_DURABLE_OBJECT` export is mandatory for the library to access the Durable Object binding.
 
 ## API surface
 
-- `getDatabase({ DURABLE_OBJECT, databaseName?, shardKey? })` → `DatabaseProxy`
+- `getDatabase(databaseName?, shardKey?)` → `DatabaseProxy`
   - Database-level ops: `listCollections`, `createCollection`, `dropCollection`, `dropDatabase`, `renameCollection`, `stats`.
   - `db.collection(name)` returns a `CollectionProxy` that mirrors most familiar `mongodb` collection methods (`find`, `findOne`, `insertOne`, `insertMany`, `updateOne`, `deleteOne`, `aggregate`, `distinct`, `countDocuments`, etc.).
-- `getCollection({ DURABLE_OBJECT, collectionName, databaseName?, shardKey? })` → shortcut to a `CollectionProxy` without calling `db.collection()`.
+- `getCollection(collectionName, databaseName?, shardKey?)` → shortcut to a `CollectionProxy` without calling `db.collection()`.
 - `runTransaction(DURABLE_OBJECT, payloads, txOptions?)` → execute multiple collection operations in a single MongoDB transaction. Each payload is `{ db?, col, op, args }` where `op` matches a supported collection/database method.
 - `MongoDurableObject` → Durable Object class to bind in Wrangler. Export it from your Worker (see example above).
 - `ObjectId` re-export is available as `import { ObjectId } from "cloudflare-do-mongo"`.

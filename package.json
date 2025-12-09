@@ -1,32 +1,34 @@
 {
-  "name": "cloudflare-do-mongo",
-  "version": "1.0.0",
-  "main": "src/index.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Imtiajrex/cloudflare-do-mongo.git"
-  },
-  "keywords": [
-    "cloudflare",
-    "durable",
-    "objects",
-    "mongodb",
-    "mongo"
-  ],
-  "author": "Imtiaj Bin Aoual",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Imtiajrex/cloudflare-do-mongo/issues"
-  },
-  "homepage": "https://github.com/Imtiajrex/cloudflare-do-mongo#readme",
-  "description": "",
-  "dependencies": {
-    "mongodb": "^7.0.0"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20251209.0"
-  }
+	"name": "cloudflare-do-mongo",
+	"version": "0.0.2",
+	"exports": {
+		"./*": "./src/index.ts"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Imtiajrex/cloudflare-do-mongo.git"
+	},
+	"keywords": [
+		"cloudflare",
+		"durable",
+		"objects",
+		"mongodb",
+		"mongo"
+	],
+	"author": "Imtiaj Bin Aoual",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/Imtiajrex/cloudflare-do-mongo/issues"
+	},
+	"homepage": "https://github.com/Imtiajrex/cloudflare-do-mongo#readme",
+	"description": "",
+	"dependencies": {
+		"mongodb": "^7.0.0"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20251209.0"
+	}
 }

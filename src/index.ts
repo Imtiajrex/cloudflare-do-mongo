@@ -8,6 +8,7 @@ import { deserializeFromJSON, serializeToJSON } from "./serialization";
 // Make sure this path correctly points to your DO file and exports the class
 import { AggregateCursor } from "./AggregateCursor";
 import { CollectionProxy } from "./CollectionProxy";
+import { DatabaseProxy } from "./DatabaseProxy";
 import type { MongoRpcPayload, MongoRpcResponseData } from "./do";
 import { FindCursor } from "./FindCursor";
 import { getDoStubForShard } from "./sharding";
@@ -22,7 +23,7 @@ interface TransactionPayloadWithNativeArgs {
 /**
  * Gets a CollectionProxy for a specific MongoDB collection.
  * This is now the primary way to interact with the database.
- * @param appEnv The application environment (e.g., process.env from Worker).
+ * @param DURABLE_OBJECT The Durable Object namespace.
  * @param collectionName The name of the MongoDB collection.
  * @param shardKey Optional: Name for the Durable Object ID.
  * @returns A CollectionProxy instance.
@@ -40,6 +41,25 @@ export function getCollection<TSchema extends Document = Document>({
 }) {
 	let doStub = getDoStubForShard(DURABLE_OBJECT, shardKey);
 	return new CollectionProxy<TSchema>(databaseName, collectionName, doStub);
+}
+
+/**
+ * Gets a DatabaseProxy for database-level operations like listing/creating collections.
+ * @param DURABLE_OBJECT The Durable Object namespace.
+ * @param shardKey Optional: Name for the Durable Object ID.
+ * @returns A DatabaseProxy instance.
+ */
+export function getDatabase({
+	DURABLE_OBJECT,
+	shardKey,
+	databaseName,
+}: {
+	DURABLE_OBJECT: DurableObjectNamespace;
+	shardKey?: string | number;
+	databaseName?: string;
+}) {
+	const doStub = getDoStubForShard(DURABLE_OBJECT, shardKey);
+	return new DatabaseProxy(databaseName, doStub);
 }
 export async function runTransaction(
 	DURABLE_OBJECT: DurableObjectNamespace,
@@ -65,4 +85,9 @@ export async function runTransaction(
 	);
 }
 
-export { AggregateCursor, FindCursor, NativeObjectId as ObjectId };
+export {
+	AggregateCursor,
+	DatabaseProxy,
+	FindCursor,
+	NativeObjectId as ObjectId,
+};

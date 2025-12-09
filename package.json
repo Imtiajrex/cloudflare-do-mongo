@@ -1,9 +1,9 @@
 {
 	"name": "cloudflare-do-mongo",
-	"version": "0.1.1",
-	"main": "./src/index.ts",
+	"version": "0.1.2",
 	"exports": {
-		"./*": "./src/*.ts"
+		"./*": "./src/*.ts",
+		".": "./src/index.ts"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"

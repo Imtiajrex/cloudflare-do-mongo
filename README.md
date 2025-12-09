@@ -19,11 +19,11 @@ A tiny helper to call MongoDB from Cloudflare Workers using Durable Objects. It 
   	],
   	"durable_objects": {
   		"bindings": [
-  			{ "name": "MONGO_DURABLE_OBJECT", "class_name": "MongoDurableObject" }
+  			{ "name": "MONGO_DURABLE_OBJECT", "class_name": "MONGO_DURABLE_OBJECT" }
   		]
   	},
   	"migrations": [
-  		{ "tag": "v1", "new_sqlite_classes": ["MongoDurableObject"] }
+  		{ "tag": "v1", "new_sqlite_classes": ["MONGO_DURABLE_OBJECT"] }
   	]
   }
   ```
@@ -38,7 +38,7 @@ A tiny helper to call MongoDB from Cloudflare Workers using Durable Objects. It 
 ## Basic Worker
 
 ```ts
-import { MongoDurableObject } from "cloudflare-do-mongo/do";
+import { MONGO_DURABLE_OBJECT } from "cloudflare-do-mongo/do";
 import { getDatabase } from "cloudflare-do-mongo";
 
 export default {
@@ -53,7 +53,7 @@ export default {
 	},
 } satisfies ExportedHandler<Env>;
 
-export const MONGO_DURABLE_OBJECT = MongoDurableObject;
+export const MONGO_DURABLE_OBJECT = MONGO_DURABLE_OBJECT;
 ```
 
 **Note:** The `MONGO_DURABLE_OBJECT` export is mandatory for the library to access the Durable Object binding.
@@ -65,7 +65,7 @@ export const MONGO_DURABLE_OBJECT = MongoDurableObject;
   - `db.collection(name)` returns a `CollectionProxy` that mirrors most familiar `mongodb` collection methods (`find`, `findOne`, `insertOne`, `insertMany`, `updateOne`, `deleteOne`, `aggregate`, `distinct`, `countDocuments`, etc.).
 - `getCollection(collectionName, databaseName?, shardKey?)` → shortcut to a `CollectionProxy` without calling `db.collection()`.
 - `runTransaction(DURABLE_OBJECT, payloads, txOptions?)` → execute multiple collection operations in a single MongoDB transaction. Each payload is `{ db?, col, op, args }` where `op` matches a supported collection/database method.
-- `MongoDurableObject` → Durable Object class to bind in Wrangler. Export it from your Worker (see example above).
+- `MONGO_DURABLE_OBJECT` → Durable Object class to bind in Wrangler. Export it from your Worker (see example above).
 - `ObjectId` re-export is available as `import { ObjectId } from "cloudflare-do-mongo"`.
 
 ## Sharding by Durable Object ID

@@ -20,28 +20,50 @@ import type { ToJsonFriendly } from "./bson-types";
 import {
 	executeMongoOperation,
 	prepareArgsWithSession,
+	executeMongoDatabaseOperation,
 } from "./operationExecutor"; // Import shared functions
 
-export interface MongoRpcPayload {
-	col: string;
-	op: // Clearer name for the operation
+export type MongoCollectionOp =
 	| "findOne"
-		| "find"
-		| "findOneAndUpdate"
-		| "findOneAndDelete"
-		| "findOneAndReplace"
-		| "insertOne"
-		| "insertMany"
-		| "updateOne"
-		| "updateMany"
-		| "deleteOne"
-		| "deleteMany"
-		| "aggregate"
-		| "distinct"
-		| "countDocuments";
+	| "find"
+	| "findOneAndUpdate"
+	| "findOneAndDelete"
+	| "findOneAndReplace"
+	| "insertOne"
+	| "insertMany"
+	| "updateOne"
+	| "updateMany"
+	| "deleteOne"
+	| "deleteMany"
+	| "aggregate"
+	| "distinct"
+	| "countDocuments";
+
+export type MongoDatabaseOp =
+	| "listCollections"
+	| "createCollection"
+	| "dropCollection"
+	| "dropDatabase"
+	| "renameCollection"
+	| "stats";
+
+export interface MongoRpcPayload {
+	col?: string;
+	op: MongoCollectionOp | MongoDatabaseOp; // Clearer name for the operation
 	args: ToJsonFriendly<unknown[]>; // Clearer name
 }
 export type MongoRpcResponseData = ToJsonFriendly<unknown>; // Clearer name
+
+function isDatabaseOp(op: MongoRpcPayload["op"]): op is MongoDatabaseOp {
+	return (
+		op === "listCollections" ||
+		op === "createCollection" ||
+		op === "dropCollection" ||
+		op === "dropDatabase" ||
+		op === "renameCollection" ||
+		op === "stats"
+	);
+}
 
 // Define the Durable Object class
 export class MongoDurableObject extends DurableObject {
@@ -162,20 +184,33 @@ export class MongoDurableObject extends DurableObject {
 					`[MongoDO ${this.ctx.id.toString()}] Database instance not available after connection attempt.`
 				);
 			}
-			const collection: Collection<Document> = this.db.collection(col);
-
 			let finalArgs = deserializeFromJSON(originalArgsFromJson) as any[];
 
 			if (session) {
 				finalArgs = prepareArgsWithSession(finalArgs, op, session); // Use shared function
 			}
 
-			// Use the shared function to execute the operation
-			const operationResult = await executeMongoOperation(
-				collection,
-				op,
-				finalArgs
-			);
+			let operationResult: unknown;
+
+			if (isDatabaseOp(op)) {
+				operationResult = await executeMongoDatabaseOperation(
+					this.db,
+					op,
+					finalArgs
+				);
+			} else {
+				if (!col) {
+					throw new Error(
+						`[MongoDO ${this.ctx.id.toString()}] Collection name is required for collection operation '${op}'.`
+					);
+				}
+				const collection: Collection<Document> = this.db.collection(col);
+				operationResult = await executeMongoOperation(
+					collection,
+					op,
+					finalArgs
+				);
+			}
 
 			return serializeToJSON(operationResult);
 		} catch (error: any) {

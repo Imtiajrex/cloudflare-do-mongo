@@ -25,7 +25,7 @@ import type { ToJsonFriendly } from "./bson-types";
 import { deserializeFromJSON, serializeToJSON } from "./serialization";
 import { AggregateCursor } from "./AggregateCursor";
 import type {
-	MongoDurableObject,
+	MONGO_DURABLE_OBJECT,
 	MongoRpcPayload,
 	MongoRpcResponseData,
 } from "./do";
@@ -37,12 +37,12 @@ export class CollectionProxy<TSchema extends Document = Document>
 {
 	private databaseName?: string;
 	private collectionName: string;
-	private doStub: DurableObjectStub<MongoDurableObject>;
+	private doStub: DurableObjectStub<MONGO_DURABLE_OBJECT>;
 
 	constructor(
 		databaseName: string | undefined,
 		collectionName: string,
-		doStub: DurableObjectStub<MongoDurableObject>
+		doStub: DurableObjectStub<MONGO_DURABLE_OBJECT>
 	) {
 		this.databaseName = databaseName;
 		this.collectionName = collectionName;

@@ -10,7 +10,7 @@ import type { ToJsonFriendly } from "./bson-types";
 import { CollectionProxy } from "./CollectionProxy";
 import type {
 	MongoDatabaseOp,
-	MongoDurableObject,
+	MONGO_DURABLE_OBJECT,
 	MongoRpcPayload,
 	MongoRpcResponseData,
 } from "./do";
@@ -18,11 +18,11 @@ import { deserializeFromJSON, serializeToJSON } from "./serialization";
 
 export class DatabaseProxy {
 	private databaseName?: string;
-	private doStub: DurableObjectStub<MongoDurableObject>;
+	private doStub: DurableObjectStub<MONGO_DURABLE_OBJECT>;
 
 	constructor(
 		databaseName: string | undefined,
-		doStub: DurableObjectStub<MongoDurableObject>
+		doStub: DurableObjectStub<MONGO_DURABLE_OBJECT>
 	) {
 		this.databaseName = databaseName;
 		this.doStub = doStub;

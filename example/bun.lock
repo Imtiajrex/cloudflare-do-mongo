@@ -4,6 +4,7 @@
     "": {
       "name": "example",
       "dependencies": {
+        "cloudflare-do-mongo": "^0.0.6",
         "mongodb": "^7.0.0",
       },
       "devDependencies": {
@@ -150,6 +151,8 @@
     "blake3-wasm": ["blake3-wasm@2.1.5", "", {}, "sha512-F1+K8EbfOZE49dtoPtmxUQrpXaBIl3ICvasLh+nJta0xkz+9kF/7uet9fLnwKqhDrmj6g+6K3Tw9yQPUg2ka5g=="],
 
     "bson": ["bson@7.0.0", "", {}, "sha512-Kwc6Wh4lQ5OmkqqKhYGKIuELXl+EPYSCObVE6bWsp1T/cGkOCBN0I8wF/T44BiuhHyNi1mmKVPXk60d41xZ7kw=="],
+
+    "cloudflare-do-mongo": ["cloudflare-do-mongo@0.0.6", "", { "dependencies": { "mongodb": "^7.0.0" } }, "sha512-bshAh1UzLDBmsJB9NjHPFQ9P8HOpZP2VdMKbRIS2F+j65n23Ea/ffk7aM1r+LgMK3/vKdYTgyeuTLdRiGQjeUA=="],
 
     "color": ["color@4.2.3", "", { "dependencies": { "color-convert": "^2.0.1", "color-string": "^1.9.0" } }, "sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A=="],
 

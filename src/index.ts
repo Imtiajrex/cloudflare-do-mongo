@@ -34,7 +34,7 @@ export function getCollection<TSchema extends Document = Document>(
 	databaseName?: string,
 	shardKey?: string | number
 ) {
-	let doStub = getDoStubForShard(env.MONGO_DURABLE_OBJECT, shardKey);
+	let doStub = getDoStubForShard((env as any).MONGO_DURABLE_OBJECT, shardKey);
 	return new CollectionProxy<TSchema>(databaseName, collectionName, doStub);
 }
 
@@ -45,7 +45,7 @@ export function getCollection<TSchema extends Document = Document>(
  * @returns A DatabaseProxy instance.
  */
 export function getDatabase(databaseName?: string, shardKey?: string | number) {
-	const doStub = getDoStubForShard(env.MONGO_DURABLE_OBJECT, shardKey);
+	const doStub = getDoStubForShard((env as any).MONGO_DURABLE_OBJECT, shardKey);
 	return new DatabaseProxy(databaseName, doStub);
 }
 export async function runTransaction(
